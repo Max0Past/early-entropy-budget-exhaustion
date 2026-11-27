@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this code or the released trajectories, please cite the preprint."
+title: "Code and analysis for: Does Early Entropy Warn of Token-Budget Exhaustion in Chain-of-Thought Decoding?"
+type: software
+authors:
+  - family-names: Pastushenko
+    given-names: Maksym
+    orcid: "https://orcid.org/0009-0008-1837-359X"
+    affiliation: "National Technical University of Ukraine \"Igor Sikorsky Kyiv Polytechnic Institute\""
+license: MIT
+version: 0.1.0
+date-released: "2026-11-28"
+repository-code: "https://github.com/Max0Past/early-entropy-budget-exhaustion"
+abstract: >-
+  Decode loop, per-step signal computation and analysis scripts for a study of whether
+  early entropy warns of token-budget exhaustion in chain-of-thought decoding. Entropy is
+  read from the raw logits at a fixed reference temperature, so that readings are
+  comparable across sampling temperatures; the scripts reproduce every number and figure
+  of the preprint from the released trajectories.
+keywords:
+  - chain-of-thought reasoning
+  - adaptive decoding
+  - predictive entropy
+  - repetition loops
+  - token budget
+preferred-citation:
+  type: article
+  status: preprint
+  title: "Does Early Entropy Warn of Token-Budget Exhaustion in Chain-of-Thought Decoding?"
+  authors:
+    - family-names: Pastushenko
+      given-names: Maksym
+      orcid: "https://orcid.org/0009-0008-1837-359X"
+  year: 2026
+  publisher:
+    name: Zenodo
+  doi: "10.5281/zenodo.24605925"

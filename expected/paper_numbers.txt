@@ -1,0 +1,109 @@
+
+=== 7. first decoding step: invariant vs tempered reading ===
+  problems with >= 2 arms          124
+  invariant spread across arms     max 0.00e+00  median 0.00e+00 nats
+  arm             T    n  invariant  tempered
+  cold-T0.1     0.1  124     0.7916     0.009
+  cold-T0.2     0.2  124     0.7916     0.089
+  cold-T0.3     0.3   72     0.8142     0.234
+  demo-T0.3     0.3   52     0.7603     0.196
+  reference     0.6  100     0.7842     0.506
+  hyp-T0.7      0.7  124     0.7916     0.582
+  hyp-T1.0      1.0  124     0.7916     0.785
+  arm means, invariant: range 0.0539 nats (arms attempt different problem sets)
+  arm means, tempered:  range 0.777 nats
+  tempered reading separates two arms: AUROC 0.755-1.000, mean 0.963 over 15 pairs of temperatures
+
+=== 8. entropy recomputed from the 32 stored logits ===
+  first step, max |top-32 minus full vocabulary| over all trajectories:
+   T=0.3: 1.1e-06  T=0.5: 4.3e-06  T=0.7: 7.6e-04  T=1.0: 6.7e-02  T=1.3: 1.1e+00  T=1.5: 3.4e+00  T=2.0: 8.1e+00
+  200,000 random steps; |top-32 minus full vocabulary|, nats
+  T=0.3  median 1.1e-08  p99 1.6e-05  max 1.80e-02
+  T=0.5  median 3.5e-08  p99 6.2e-03  max 2.46e-01
+  T=0.7  median 6.6e-07  p99 7.9e-02  max 1.30e+00
+  T=1.0  median 4.7e-04  p99 6.1e-01  max 4.26e+00
+  T=1.3  median 2.4e-02  p99 2.4e+00  max 7.86e+00
+  T=1.5  median 1.6e-01  p99 4.4e+00  max 9.20e+00
+  T=2.0  median 3.1e+00  p99 8.2e+00  max 9.87e+00
+
+=== 9. problem difficulty and early entropy ===
+  124 problems; failing trajectories per problem vs mean entropy over steps 128-255
+  Spearman rho 0.519, p = 6.9e-10
+  problems with >= 1 failure: 47
+
+=== 10. residual ranking (entropy minus its problem mean), by arm ===
+  K=256: 594 trajectories, 82 events: AUROC 0.494 [0.422, 0.562]
+
+=== 11. events under each target definition ===
+  rate intervals: Wilson (independent trajectories) and cluster bootstrap by problem
+  repetition_marker               6 / 720   Wilson [0.38, 1.81]%   cluster [0.28, 1.52]%
+  exact_periodic_tail            47 / 720   Wilson [4.94, 8.57]%   cluster [4.71, 8.59]%
+  ceiling                        84 / 720   Wilson [9.52, 14.22]%   cluster [8.68, 15.01]%
+  ceiling_and_near_zero_tail     68 / 720   Wilson [7.52, 11.80]%   cluster [7.07, 12.12]%
+  repetition-marker events: 6/6 at the ceiling, temperatures [0.20000000298023224, 0.30000001192092896], 6 problems, extraction outcomes {'no_span': 6}
+  ceiling events with an exactly periodic tail: 47
+
+=== 12. persistence detector vs located onsets (exploratory) ===
+  false-alarm set: 631 terminated trajectories with a scorable answer
+  target = periodic (47 trajectories)
+    best zero-false-alarm setting: level 0.2, persistence 800: fires on 44/47, 6 before onset, median lead +1495 steps
+    false alarms <=  1%: at most 9/47 fire before onset
+    false alarms <=  5%: at most 18/47 fire before onset
+    false alarms <= 10%: at most 18/47 fire before onset
+    cheapest anticipatory setting: 2/47 before onset at 0% false alarms
+    most fires before onset: 47/47, at the cheapest 100% false alarms
+  target = repetition (6 trajectories)
+    best zero-false-alarm setting: level 0.05, persistence 400: fires on 6/6, 0 before onset, median lead +872 steps
+    false alarms <=  1%: at most 0/6 fire before onset
+    false alarms <=  5%: at most 0/6 fire before onset
+    false alarms <= 10%: at most 0/6 fire before onset
+    cheapest anticipatory setting: 1/6 before onset at 23% false alarms
+    most fires before onset: 6/6, at the cheapest 100% false alarms
+  longest run of ma24 < 0.05 in terminated trajectories: max 352, 99th pct 130
+  same after a periodic onset: min 68, median 325
+  same after a repetition onset: min 2781, median 3478
+
+=== 13. persistence detector vs a period-agnostic repetition marker (exploratory) ===
+  marker: at most q of the last W 8-grams are new to the trajectory
+     W     q  marker on: periodic  other ceiling  terminated   before exact onset   detector before marker
+   128  0.05         47/47        23/37     16/631   median  1845 steps     0/47@1% 0/47@5% 0/47@10%
+   128  0.10         47/47        24/37     25/631   median  2127 steps     0/47@1% 0/47@5% 0/47@10%
+   128  0.25         47/47        27/37     45/631   median  2522 steps     0/47@1% 0/47@5% 0/47@10%
+   256  0.05         47/47        21/37      7/631   median   934 steps     0/47@1% 0/47@5% 0/47@10%
+   256  0.10         47/47        22/37     10/631   median  1358 steps     0/47@1% 0/47@5% 0/47@10%
+   256  0.25         47/47        25/37     28/631   median  2218 steps     0/47@1% 0/47@5% 0/47@10%
+  W=128 q=0.05: cheapest setting with any fire before the marker: 10/47 at 23.0% false alarms (level 0.02, persistence 32); marker minus find_onset on the 6 marker events: [143, 81, -165, 176, -359, -209]
+  W=128 q=0.10: cheapest setting with any fire before the marker: 9/47 at 23.0% false alarms (level 0.02, persistence 32); marker minus find_onset on the 6 marker events: [137, 75, -171, 129, -403, -215]
+  W=128 q=0.25: cheapest setting with any fire before the marker: 8/47 at 23.0% false alarms (level 0.02, persistence 32); marker minus find_onset on the 6 marker events: [82, 54, -1701, 93, -1298, -1312]
+  W=256 q=0.05: cheapest setting with any fire before the marker: 2/47 at 12.7% false alarms (level 0.05, persistence 64); marker minus find_onset on the 6 marker events: [265, 203, -43, 257, -231, 166]
+  W=256 q=0.10: cheapest setting with any fire before the marker: 2/47 at 12.7% false alarms (level 0.05, persistence 64); marker minus find_onset on the 6 marker events: [232, 189, -123, 237, -342, 83]
+  W=256 q=0.25: cheapest setting with any fire before the marker: 1/47 at 12.7% false alarms (level 0.05, persistence 64); marker minus find_onset on the 6 marker events: [145, 101, -877, 186, -548, -1185]
+  level 0.5 / 400 (3.8% false alarms): 18 fires precede the exact onset, 18 of them follow the marker (W=256, q=0.05)
+  false alarms at that setting: share of new 8-grams in the last 256 tokens, median 0.92 (repeating text would be near 0)
+
+=== 14. details quoted in the text ===
+  K=256: 594 trajectories; the within-problem estimate uses 45 problems with both outcomes (215 trajectories)
+  K=512: 589 trajectories; the within-problem estimate uses 45 problems with both outcomes (214 trajectories)
+  K=1024: 445 trajectories; the within-problem estimate uses 45 problems with both outcomes (196 trajectories)
+  last 1024 tokens, share of 8-grams new to the trajectory:
+    terminated (>= 1024 tokens, n=461): median 0.904, exactly periodic 0
+    exhausted, cold-T0.1  T=0.1: n=29, median 0.000, exactly periodic 25
+    exhausted, cold-T0.2  T=0.2: n=23, median 0.000, exactly periodic 14
+    exhausted, cold-T0.3  T=0.3: n= 8, median 0.000, exactly periodic 4
+    exhausted, demo-T0.3  T=0.3: n= 8, median 0.000, exactly periodic 4
+    exhausted, reference  T=0.6: n= 8, median 0.438, exactly periodic 0
+    exhausted, hyp-T0.7   T=0.7: n= 2, median 0.658, exactly periodic 0
+    exhausted, hyp-T1.0   T=1.0: n= 6, median 0.940, exactly periodic 0
+  exhausted trajectories by extraction outcome: {'no_span': 81, 'parsed_decimal': 3}, correct 0
+
+=== 15. baselines that see no trajectory, and paired differences (exploratory) ===
+  K=256: 594 trajectories, 82 exhausted
+    mean entropy, steps 128-255  within condition 0.742   within problem 0.441
+    minus entropy at step 0      within condition 0.721   within problem 0.500
+    minus temperature            within condition 0.500   within problem 0.755
+  entropy, within condition minus within problem: +0.301 [+0.217, +0.389]
+  within condition, entropy minus step-0 baseline: +0.022 [-0.069, +0.126]
+  exhausted-terminated pairs within conditions: 7372; early entropy and the step-0 baseline order 2520 (34.2%) in opposite directions, 0 ties
+  all 717 trajectories at risk, no condition dropped: within condition 0.744, within problem 0.478 [0.398, 0.553]
+  within problem, entropy as percentile within its condition: 0.500 [0.403, 0.596]
+

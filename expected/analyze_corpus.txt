@@ -1,0 +1,73 @@
+=== 0. corpus ===
+  runs                    20260806T212541Z-768873, 20260820T220044Z-9e47ab
+  trajectories loaded     772
+  duplicates dropped      52   (matched on problem, temperature, top_p, seed)
+  independent             720
+  steps                   1,904,584
+  problems                124
+
+=== 1. class composition ===
+  healthy               577   80.1%  [77.1, 82.9]
+  failed_termination     84   11.7%  [ 9.5, 14.2]
+  semantic_error         54    7.5%  [ 5.8,  9.7]
+  extraction_failed       5    0.7%  [ 0.3,  1.6]
+
+=== 2. failure to terminate, by arm ===
+  arm              T  top_p     n  ceiling  95% CI
+  cold-T0.1      0.1   1.00   124   29 (23.4%)  [16.8, 31.6]
+  cold-T0.2      0.2   1.00   124   23 (18.5%)  [12.7, 26.3]
+  cold-T0.3      0.3   1.00    72    8 (11.1%)  [ 5.7, 20.4]
+  demo-T0.3      0.3   1.00    52    8 (15.4%)  [ 8.0, 27.5]
+  reference      0.6   0.95   100    8 ( 8.0%)  [ 4.1, 15.0]
+  hyp-T0.7       0.7   1.00   124    2 ( 1.6%)  [ 0.4,  5.7]
+  hyp-T1.0       1.0   1.00   124    6 ( 4.8%)  [ 2.2, 10.2]
+
+=== 3. exactly periodic tails ===
+  trajectories with an exactly periodic tail   47
+    of which reached the ceiling               47
+    period   median 148   range 9-495
+    onset    median 4440  range 588-7100
+    tokens emitted after onset                 191,487  (10.1% of corpus)
+    by arm: cold-T0.1 25, cold-T0.2 14, cold-T0.3 4, demo-T0.3 4
+
+=== 4. does an early signal predict failure to terminate ===
+  stratified by ARM holds the sampling condition fixed and varies the problem;
+  stratified by PROBLEM holds the problem fixed and varies the condition.
+
+  K = 256:  risk set 717, after arm filter 594 (123 dropped from 1 arm(s)), events 82
+    entropy     by arm 0.742 [0.672, 0.804]   by problem 0.441 [0.355, 0.527]
+    margin      by arm 0.294 [0.228, 0.365]   by problem 0.588 [0.492, 0.679]
+    surprisal   by arm 0.728 [0.655, 0.791]   by problem 0.304 [0.217, 0.390]
+    kl_prev     by arm 0.260 [0.198, 0.326]   by problem 0.549 [0.450, 0.651]
+    logit_var   by arm 0.759 [0.694, 0.815]   by problem 0.461 [0.369, 0.549]
+
+  K = 512:  risk set 712, after arm filter 589 (123 dropped from 1 arm(s)), events 82
+    entropy     by arm 0.659 [0.581, 0.735]   by problem 0.532 [0.436, 0.629]
+    margin      by arm 0.360 [0.280, 0.440]   by problem 0.448 [0.352, 0.549]
+    surprisal   by arm 0.655 [0.575, 0.732]   by problem 0.399 [0.328, 0.475]
+    kl_prev     by arm 0.299 [0.234, 0.369]   by problem 0.517 [0.429, 0.595]
+    logit_var   by arm 0.663 [0.585, 0.737]   by problem 0.512 [0.416, 0.606]
+
+  K = 1024:  risk set 544, after arm filter 445 (99 dropped from 1 arm(s)), events 82
+    entropy     by arm 0.644 [0.578, 0.707]   by problem 0.425 [0.337, 0.517]
+    margin      by arm 0.369 [0.303, 0.437]   by problem 0.530 [0.437, 0.617]
+    surprisal   by arm 0.649 [0.586, 0.717]   by problem 0.370 [0.287, 0.451]
+    kl_prev     by arm 0.326 [0.261, 0.392]   by problem 0.547 [0.449, 0.641]
+    logit_var   by arm 0.660 [0.596, 0.729]   by problem 0.376 [0.289, 0.461]
+
+=== 5. entropy change at the ceiling, by arm ===
+  arm              T    n  median dH   rising
+  cold-T0.1      0.1   29     -0.260    0/29
+  cold-T0.2      0.2   23     -0.284    0/23
+  cold-T0.3      0.3    8     -0.276    0/8
+  demo-T0.3      0.3    8     -0.223    1/8
+  reference      0.6    8      0.019    5/8
+  hyp-T0.7       0.7    2     -0.040    1/2
+  hyp-T1.0       1.0    6      0.932    6/6
+
+=== 6. detector: ma24(entropy) < 0.05 for 400 consecutive steps ===
+  fires on ceiling trajectories   19 / 84
+  false alarms                    0 / 636
+  median firing step              6259
+  tokens saved by stopping there  49,879  (2.62% of corpus)
+

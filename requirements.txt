@@ -1,0 +1,16 @@
+# Generation stack, as used for both runs (full freeze: env.lock.txt).
+# Install torch first, from the PyTorch index (see the header of environment.yml):
+#   pip install torch==2.11.0+cu128 --index-url https://download.pytorch.org/whl/cu128
+# transformers is pinned exactly: an upgrade between runs changes the KV-cache API
+# and silently makes runs incomparable.
+transformers==4.57.1
+accelerate==1.14.0
+tokenizers==0.22.2
+safetensors==0.8.0
+datasets==5.0.0
+numpy==2.4.6
+pandas==3.0.5
+pyarrow==25.0.0
+scipy==1.17.1
+matplotlib==3.11.1
+PyYAML==6.0.3

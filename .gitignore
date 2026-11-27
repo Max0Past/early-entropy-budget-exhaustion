@@ -1,0 +1,11 @@
+# Trajectories are released separately (see README); unpack them here.
+data/
+
+# Written by reproduce.sh
+results/
+figures/
+
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/

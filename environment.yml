@@ -1,0 +1,25 @@
+# Conda provides the interpreter and isolation only.
+# Everything else comes from pip, to avoid conda/pip ABI conflicts around torch.
+#
+#   mamba env create -f environment.yml
+#   conda activate cotctl
+#   # torch first, from pytorch.org, before anything else. Installed and verified
+#   # on the original host (RTX 3060, sm_86, driver 580.173.02) on 2026-07-25:
+#   pip install torch==2.11.0+cu128 --index-url https://download.pytorch.org/whl/cu128
+#   pip install -r requirements.txt
+#   pip freeze > env.lock.txt   # commit this; it is part of the experiment record
+#
+# Note: torch ships its own CUDA runtime. No system CUDA toolkit is needed,
+# only the NVIDIA driver. RTX 3060 is sm_86 (Ampere) with native bf16 support.
+
+name: cotctl
+
+channels:
+  - conda-forge
+  - nodefaults   # required: a global ~/.condarc with `channels: [defaults]` otherwise
+                 # pulls in repo.anaconda.com and blocks on its Terms of Service.
+
+dependencies:
+  - python=3.11
+  - pip
+  - git

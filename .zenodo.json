@@ -1,0 +1,36 @@
+{
+  "upload_type": "software",
+  "title": "Code and analysis for: Does Early Entropy Warn of Token-Budget Exhaustion in Chain-of-Thought Decoding?",
+  "version": "0.1.0",
+  "creators": [
+    {
+      "name": "Pastushenko, Maksym",
+      "orcid": "0009-0008-1837-359X",
+      "affiliation": "National Technical University of Ukraine \"Igor Sikorsky Kyiv Polytechnic Institute\""
+    }
+  ],
+  "description": "<p>Decode loop, per-step signal computation and analysis scripts for the preprint <em>Does Early Entropy Warn of Token-Budget Exhaustion in Chain-of-Thought Decoding?</em> The decode loop reads the raw logits before any temperature or truncation is applied and stores, for every step, entropy and four other statistics at a fixed reference temperature, entropy at seven temperatures, and the top-32 logits. The analysis scripts reproduce every number and figure of the preprint from the released trajectories in about five minutes on a CPU (<code>bash reproduce.sh</code>), and compare the output with the reference tables in <code>expected/</code>.</p>",
+  "license": "mit",
+  "access_right": "open",
+  "language": "eng",
+  "keywords": [
+    "chain-of-thought reasoning",
+    "adaptive decoding",
+    "predictive entropy",
+    "repetition loops",
+    "token budget",
+    "reproducibility"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://doi.org/10.5281/zenodo.24605925",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "https://doi.org/10.5281/zenodo.24606040",
+      "relation": "compiles",
+      "resource_type": "dataset"
+    }
+  ]
+}
