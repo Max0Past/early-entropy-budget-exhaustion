@@ -9,7 +9,8 @@ authors:
     affiliation: "National Technical University of Ukraine \"Igor Sikorsky Kyiv Polytechnic Institute\""
 license: MIT
 version: 0.1.0
-date-released: "2026-11-28"
+doi: "10.5281/zenodo.24606435"
+date-released: "2026-11-27"
 repository-code: "https://github.com/Max0Past/early-entropy-budget-exhaustion"
 abstract: >-
   Decode loop, per-step signal computation and analysis scripts for a study of whether

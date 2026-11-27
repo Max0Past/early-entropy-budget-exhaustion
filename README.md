@@ -1,7 +1,9 @@
 # Does early entropy warn of token-budget exhaustion in chain-of-thought decoding?
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24606434.svg)](https://doi.org/10.5281/zenodo.24606434)
+
 Code, analysis and figures for the preprint of the same title (Pastushenko, 2026).
-Preprint: [10.5281/zenodo.24605925](https://doi.org/10.5281/zenodo.24605925). Trajectories: [10.5281/zenodo.24606040](https://doi.org/10.5281/zenodo.24606040).
+Preprint: [10.5281/zenodo.24605925](https://doi.org/10.5281/zenodo.24605925). Trajectories: [10.5281/zenodo.24606040](https://doi.org/10.5281/zenodo.24606040). This code, v0.1.0: [10.5281/zenodo.24606435](https://doi.org/10.5281/zenodo.24606435).
 
 ## The question
 
